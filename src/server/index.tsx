@@ -27,6 +27,8 @@ const [hostname, port] = process.env["LEMMY_UI_HOST"]
 const extraThemesFolder =
   process.env["LEMMY_UI_EXTRA_THEMES_FOLDER"] || "./extra_themes";
 
+const customScript = process.env["LEMMY_UI_CUSTOM_SCRIPT"] || "";
+
 server.use(function (_req, res, next) {
   // in debug mode, websocket backend may be on another port, so we need to permit it in csp policy
   var websocketBackend;
@@ -200,6 +202,9 @@ server.get("/*", async (req, res) => {
 
            <!-- A remote debugging utility for mobile -->
            ${erudaStr}
+
+           <!-- Custom injected script -->
+           ${customScript}
 
            ${helmet.title.toString()}
            ${helmet.meta.toString()}
