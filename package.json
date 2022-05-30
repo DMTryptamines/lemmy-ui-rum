@@ -1,7 +1,7 @@
 {
   "name": "lemmy-ui",
   "description": "An isomorphic UI for lemmy",
-  "version": "0.16.4-rc.10",
+  "version": "0.16.5",
   "author": "Dessalines <tyhou13@gmx.com>",
   "license": "AGPL-3.0",
   "scripts": {
@@ -38,6 +38,7 @@
     "markdown-it": "^13.0.0",
     "markdown-it-container": "^3.0.0",
     "markdown-it-footnote": "^3.0.3",
+    "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-html5-embed": "^1.0.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",

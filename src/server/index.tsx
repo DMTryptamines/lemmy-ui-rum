@@ -26,7 +26,7 @@ import process from "process";
 import serialize from "serialize-javascript";
 import { App } from "../shared/components/app/app";
 import { SYMBOLS } from "../shared/components/common/symbols";
-import { httpBaseInternal, wsUriBase } from "../shared/env";
+import { httpBaseInternal } from "../shared/env";
 import {
   ILemmyConfig,
   InitialFetchRequest,
@@ -42,15 +42,16 @@ const [hostname, port] = process.env["LEMMY_UI_HOST"]
 const extraThemesFolder =
   process.env["LEMMY_UI_EXTRA_THEMES_FOLDER"] || "./extra_themes";
 
-if (!process.env["LEMMY_UI_DEBUG"]) {
-  server.use(function (_req, res, next) {
-    res.setHeader(
-      "Content-Security-Policy",
-      `default-src 'none'; connect-src 'self' ${wsUriBase}; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; form-action 'self'; base-uri 'self'`
-    );
-    next();
-  });
-}
+// Commenting out for now, since this broke iOS / webkit browsers.
+// if (!process.env["LEMMY_UI_DEBUG"]) {
+//   server.use(function (_req, res, next) {
+//     res.setHeader(
+//       "Content-Security-Policy",
+//       `default-src 'none'; connect-src 'self' ${wsUriBase}; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; form-action 'self'; base-uri 'self'`
+//     );
+//     next();
+//   });
+// }
 const customHtmlHeader = process.env["LEMMY_UI_CUSTOM_HTML_HEADER"] || "";
 
 server.use(express.json());
@@ -75,19 +76,24 @@ server.get("/robots.txt", async (_req, res) => {
   res.send(robotstxt);
 });
 
-server.get("/css/themes/:name", async (req, res) => {
+server.get("/css/themes/:set?/:name", async (req, res) => {
   res.contentType("text/css");
   const theme = req.params.name;
   if (!theme.endsWith(".css")) {
     res.send("Theme must be a css file");
   }
 
-  const customTheme = path.resolve(`./${extraThemesFolder}/${theme}`);
-  if (fs.existsSync(customTheme)) {
-    res.sendFile(customTheme);
+  if (req.params.set === 'hljs') {
+    const hljsTheme = path.resolve(`./node_modules/highlight.js/styles/${theme}`);
+    res.sendFile(hljsTheme);
   } else {
-    const internalTheme = path.resolve(`./dist/assets/css/themes/${theme}`);
-    res.sendFile(internalTheme);
+    const customTheme = path.resolve(`./${extraThemesFolder}/${theme}`);
+    if (fs.existsSync(customTheme)) {
+      res.sendFile(customTheme);
+    } else {
+      const internalTheme = path.resolve(`./dist/assets/css/themes/${theme}`);
+      res.sendFile(internalTheme);
+    }
   }
 });
 
