@@ -17,6 +17,7 @@
   },
   "repository": "https://github.com/LemmyNet/lemmy-ui",
   "dependencies": {
+    "@elastic/apm-rum": "^5.11.1",
     "@typescript-eslint/parser": "^5.21.0",
     "autosize": "^5.0.1",
     "check-password-strength": "^2.0.5",

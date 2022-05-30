@@ -101,7 +101,13 @@ const createClientConfig = (_env, mode) => {
 
   return config;
 };
+const { EnvironmentPlugin } = require('webpack');
 
+plugins: [
+  new EnvironmentPlugin({
+    NODE_ENV: 'production'
+  })
+];
 module.exports = (env, properties) => [
   createServerConfig(env, properties.mode || "development"),
   createClientConfig(env, properties.mode || "development"),
