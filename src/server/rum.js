@@ -12,5 +12,6 @@ var apm = initApm({
 
   // Set the service environment
   environment: 'production'
+  // distributedTracingOrigins: ['http://localhost:8080'], 
 })
 export default apm;
